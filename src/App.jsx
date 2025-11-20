@@ -3,14 +3,22 @@ import { supabase } from "./supabase-client";
 import "./App.css";
 
 export default function App() {
+<<<<<<< HEAD
   
+=======
+  // --- State for tasks (same as yours) ---
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const [newDescription, setNewDescription] = useState("");
   const [taskImage, setTaskImage] = useState(null);
   const [taskVideo, setTaskVideo] = useState(null);
 
+<<<<<<< HEAD
   
+=======
+  // --- Auth state ---
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
   const [authUser, setAuthUser] = useState(null);
   const [authMode, setAuthMode] = useState("signin"); // 'signin' or 'signup'
   const [authEmail, setAuthEmail] = useState("");
@@ -18,7 +26,11 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(false);
   const [authMessage, setAuthMessage] = useState("");
 
+<<<<<<< HEAD
  
+=======
+  // ✅ Check if user is already logged in and listen for changes
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
   useEffect(() => {
     const getSession = async () => {
       const {
@@ -35,7 +47,11 @@ export default function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+<<<<<<< HEAD
   
+=======
+  // --- AUTH HANDLERS ---
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
   const handleSignUp = async (e) => {
     e.preventDefault();
     setAuthLoading(true);
@@ -73,7 +89,11 @@ export default function App() {
     setAuthMessage("");
   };
 
+<<<<<<< HEAD
   
+=======
+  // --- FILE UPLOAD ---
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
   const uploadFile = async (file, folder) => {
     try {
       const filePath = `${folder}/${Date.now()}-${file.name}`;
@@ -170,10 +190,18 @@ export default function App() {
     return () => supabase.removeChannel(channel);
   }, [authUser]);
 
+<<<<<<< HEAD
   if (!authUser) {
    
     return (
       <div className="text-purple-300">
+=======
+  // --- UI ---
+  if (!authUser) {
+    // 🔐 Show SIGN IN / SIGN UP SCREEN FIRST
+    return (
+      <div className="auth-container">
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
         <h2>{authMode === "signin" ? "Sign In" : "Sign Up"}</h2>
         <form
           onSubmit={authMode === "signin" ? handleSignIn : handleSignUp}
@@ -215,6 +243,7 @@ export default function App() {
     );
   }
 
+<<<<<<< HEAD
   
   return (
   <div
@@ -327,4 +356,75 @@ export default function App() {
 );
 
 
+=======
+  // ✅ If logged in — show the Task app
+  return (
+    <div className="App-Container">
+      <h2>Task Manager (with Image & Video)</h2>
+      <p>Signed in as: <b>{authUser.email}</b></p>
+      <button onClick={handleSignOut}>Sign Out</button>
+
+      <form onSubmit={createTask}>
+        <input
+          type="text"
+          placeholder="Title Here"
+          value={newTask.title}
+          onChange={(e) =>
+            setNewTask((prev) => ({ ...prev, title: e.target.value }))
+          }
+          required
+        />
+        <textarea
+          placeholder="Description Here"
+          value={newTask.description}
+          onChange={(e) =>
+            setNewTask((prev) => ({ ...prev, description: e.target.value }))
+          }
+          required
+        />
+        <input type="file" accept="image/*" onChange={(e) => setTaskImage(e.target.files[0])} />
+        <input type="file" accept="video/*" onChange={(e) => setTaskVideo(e.target.files[0])} />
+        <button type="submit">Add Task</button>
+      </form>
+
+      <ul>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            <div>
+              <h1>{task.title}</h1>
+              <p>{task.description}</p>
+
+              {task.image_url && (
+                <img
+                  src={task.image_url}
+                  alt="Uploaded"
+                  width="320"
+                  style={{ borderRadius: "10px", marginTop: "10px" }}
+                />
+              )}
+
+              {task.video_url && (
+                <video
+                  src={task.video_url}
+                  controls
+                  width="320"
+                  style={{ marginTop: "10px", borderRadius: "10px" }}
+                />
+              )}
+
+              <textarea
+                placeholder="Edit description here"
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+              />
+
+              <button onClick={() => updateTask(task.id)}>Update</button>
+              <button onClick={() => deleteTask(task.id)}>Delete</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+>>>>>>> 438bd61817eeae6d01470e5c3ccb6d2a761ade65
 }
