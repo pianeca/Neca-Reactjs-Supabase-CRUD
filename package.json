@@ -28,6 +28,11 @@
     "globals": "^16.4.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
+<<<<<<< HEAD
+=======
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.45.0",
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
     "vite": "^7.1.7"
   }
 }

@@ -3,22 +3,34 @@ import { supabase } from "./supabase-client";
 import "./App.css";
 
 export default function App() {
+<<<<<<< HEAD
   
+=======
+  // --- States ---
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const [newDescription, setNewDescription] = useState("");
   const [taskImage, setTaskImage] = useState(null);
   const [taskVideo, setTaskVideo] = useState(null);
 
+<<<<<<< HEAD
   
+=======
+  // --- Auth state ---
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
   const [authUser, setAuthUser] = useState(null);
-  const [authMode, setAuthMode] = useState("signin"); // 'signin' or 'signup'
+  const [authMode, setAuthMode] = useState("signin");
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
   const [authMessage, setAuthMessage] = useState("");
 
+<<<<<<< HEAD
  
+=======
+  // --- Check auth session ---
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
   useEffect(() => {
     const getSession = async () => {
       const {
@@ -35,17 +47,23 @@ export default function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+<<<<<<< HEAD
   
+=======
+  // --- AUTH HANDLERS ---
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
   const handleSignUp = async (e) => {
     e.preventDefault();
     setAuthLoading(true);
     setAuthMessage("");
+
     const { error } = await supabase.auth.signUp({
       email: authEmail,
       password: authPassword,
     });
+
     if (error) setAuthMessage("Sign up error: " + error.message);
-    else setAuthMessage("Sign up success! Check your email to confirm.");
+    else setAuthMessage("Sign up success! Check your email.");
     setAuthLoading(false);
   };
 
@@ -53,10 +71,12 @@ export default function App() {
     e.preventDefault();
     setAuthLoading(true);
     setAuthMessage("");
+
     const { error } = await supabase.auth.signInWithPassword({
       email: authEmail,
       password: authPassword,
     });
+
     if (error) setAuthMessage("Sign in error: " + error.message);
     else setAuthMessage("Signed in successfully!");
     setAuthLoading(false);
@@ -73,7 +93,11 @@ export default function App() {
     setAuthMessage("");
   };
 
+<<<<<<< HEAD
   
+=======
+  // --- FILE UPLOAD ---
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
   const uploadFile = async (file, folder) => {
     try {
       const filePath = `${folder}/${Date.now()}-${file.name}`;
@@ -82,7 +106,7 @@ export default function App() {
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) {
-        console.error("❌ Upload error:", uploadError.message);
+        console.error("Upload error:", uploadError.message);
         return null;
       }
 
@@ -110,6 +134,7 @@ export default function App() {
 
     let imageUrl = null;
     let videoUrl = null;
+
     if (taskImage) imageUrl = await uploadFile(taskImage, "images");
     if (taskVideo) videoUrl = await uploadFile(taskVideo, "videos");
 
@@ -122,9 +147,7 @@ export default function App() {
       },
     ]);
 
-    if (error) console.error("❌ Insert error:", error.message);
-    else {
-      console.log("✅ Task added successfully!");
+    if (!error) {
       setNewTask({ title: "", description: "" });
       setTaskImage(null);
       setTaskVideo(null);
@@ -137,9 +160,8 @@ export default function App() {
       .from("tasks")
       .update({ description: newDescription })
       .eq("id", id);
-    if (error) console.error("Update error:", error.message);
-    else {
-      console.log("✅ Task updated");
+
+    if (!error) {
       setNewDescription("");
       fetchTasks();
     }
@@ -147,16 +169,15 @@ export default function App() {
 
   const deleteTask = async (id) => {
     if (!window.confirm("Delete this task?")) return;
+
     const { error } = await supabase.from("tasks").delete().eq("id", id);
-    if (error) console.error("Delete error:", error.message);
-    else {
-      console.log("✅ Task deleted");
-      fetchTasks();
-    }
+
+    if (!error) fetchTasks();
   };
 
+  // --- Realtime & auto-fetch after login ---
   useEffect(() => {
-    if (authUser) fetchTasks(); // only load tasks after login
+    if (authUser) fetchTasks();
 
     const channel = supabase
       .channel("tasks-changes")
@@ -170,6 +191,7 @@ export default function App() {
     return () => supabase.removeChannel(channel);
   }, [authUser]);
 
+<<<<<<< HEAD
   if (!authUser) {
    
     return (
@@ -217,6 +239,59 @@ export default function App() {
 
   
   return (
+=======
+  // --- LOGIN UI ---
+  if (!authUser) {
+    // --- AUTH UI ---
+return (
+  <div
+    className="text-purple-300"
+    style={{ textAlign: "center", padding: "2rem" }}
+  >
+    <h2>{authMode === "signin" ? "Sign In" : "Sign Up"}</h2>
+
+    <form
+      onSubmit={authMode === "signin" ? handleSignIn : handleSignUp}
+      className="auth-form"
+      style={{ display: "flex", flexDirection: "column", gap: "10px", width: "250px", margin: "0 auto" }}
+    >
+      <input
+        type="email"
+        placeholder="Email"
+        value={authEmail}
+        onChange={(e) => setAuthEmail(e.target.value)}
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={authPassword}
+        onChange={(e) => setAuthPassword(e.target.value)}
+        required
+      />
+
+      <button type="submit" disabled={authLoading}>
+        {authLoading
+          ? "Please wait..."
+          : authMode === "signin"
+          ? "Sign In"
+          : "Sign Up"}
+      </button>
+
+      <p style={{ cursor: "pointer" }} onClick={toggleAuthMode}>
+        {authMode === "signin" ? "Switch to Sign Up" : "Switch to Sign In"}
+      </p>
+
+      {authMessage && <p>{authMessage}</p>}
+    </form>
+  </div>
+);
+}
+
+// --- LOGGED IN UI ---
+return (
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
   <div
     className="App-Container"
     style={{
@@ -225,54 +300,54 @@ export default function App() {
       padding: "1rem",
       border: "3px solid green",
       borderRadius: "10px",
-      textAlign: "center", // ✅ center all text inside container
+      textAlign: "center",
     }}
   >
-    <h2 className="text-3xl font-bold underline mb-4" style={{ color: "purple" }}>
+    <h2
+      className="text-3xl font-bold underline mb-4"
+      style={{ color: "purple" }}
+    >
       Pia's Task Manager
     </h2>
-    <p className="mb-4">
+
+    <p>
       Signed in as: <b>{authUser.email}</b>
     </p>
-    <button onClick={handleSignOut} className="mb-4">
+    <button onClick={handleSignOut} style={{ marginBottom: "1rem" }}>
       Sign Out
     </button>
 
-    <form onSubmit={createTask} style={{ marginBottom: "2rem" }}>
+    <form
+      onSubmit={createTask}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        width: "90%",
+        margin: "0 auto 2rem",
+      }}
+    >
       <input
         type="text"
         placeholder="Title Here"
         value={newTask.title}
-        onChange={(e) =>
-          setNewTask((prev) => ({ ...prev, title: e.target.value }))
-        }
+        onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
         required
-        style={{ display: "block", width: "90%", margin: "10px auto", padding: "8px" }}
       />
+
       <textarea
         placeholder="Description Here"
         value={newTask.description}
         onChange={(e) =>
-          setNewTask((prev) => ({ ...prev, description: e.target.value }))
+          setNewTask({ ...newTask, description: e.target.value })
         }
         required
-        style={{ display: "block", width: "90%", margin: "10px auto", padding: "8px" }}
       />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setTaskImage(e.target.files[0])}
-        style={{ display: "block", margin: "10px auto" }}
-      />
-      <input
-        type="file"
-        accept="video/*"
-        onChange={(e) => setTaskVideo(e.target.files[0])}
-        style={{ display: "block", margin: "10px auto" }}
-      />
-      <button type="submit" style={{ marginTop: "10px" }}>
-        Add Task
-      </button>
+
+      <input type="file" accept="image/*" onChange={(e) => setTaskImage(e.target.files[0])} />
+      <input type="file" accept="video/*" onChange={(e) => setTaskVideo(e.target.files[0])} />
+
+      <button type="submit">Add Task</button>
     </form>
 
     <ul style={{ listStyle: "none", padding: 0 }}>
@@ -284,11 +359,11 @@ export default function App() {
               borderRadius: "10px",
               padding: "15px",
               marginBottom: "15px",
-              textAlign: "left", // ✅ align task content to left for readability
+              textAlign: "left",
             }}
           >
-            <h3 style={{ marginBottom: "5px" }}>{task.title}</h3>
-            <p style={{ marginBottom: "10px" }}>{task.description}</p>
+            <h3>{task.title}</h3>
+            <p>{task.description}</p>
 
             {task.image_url && (
               <img
@@ -309,13 +384,15 @@ export default function App() {
             )}
 
             <textarea
-              placeholder="Edit description here"
+              placeholder="Edit description"
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
-              style={{ display: "block", width: "100%", marginBottom: "10px", padding: "8px" }}
+              style={{ width: "100%", marginBottom: "10px" }}
             />
 
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <button onClick={() => updateTask(task.id)}>Update</button>
               <button onClick={() => deleteTask(task.id)}>Delete</button>
             </div>
@@ -326,5 +403,8 @@ export default function App() {
   </div>
 );
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a069449ed1b93d9e333ae9334b173eb49b73d36c
 }
